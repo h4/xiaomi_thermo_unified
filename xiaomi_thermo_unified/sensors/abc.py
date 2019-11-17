@@ -11,10 +11,6 @@ class XiaomiSensorABC(ABC):
         self._device_info = self._collect_device_info()
 
     @property
-    def device_name(self):
-        return self._device_info.device_name
-
-    @property
     def firmware_revision(self):
         return self._device_info.firmware_revision
 
@@ -57,10 +53,13 @@ class XiaomiSensorABC(ABC):
         return data
 
     def _collect_device_info(self):
-        device_name = self.characteristics(uuids.DEVICE_NAME)
-        serial_number = self.characteristics(uuids.SERIAL_NUMBER)
-        manufacturer = self.characteristics(uuids.MANUFACTURER_NAME)
-        model_number = self.characteristics(uuids.MODEL_NUMBER)
-        hardware_version = self.characteristics(uuids.HARDWARE_VERSION)
-        firmware_version = self.characteristics(uuids.FIRMWARE_VERSION)
-        return DeviceInfo(device_name, serial_number, manufacturer, model_number, hardware_version, firmware_version)
+        s = self._peripheral.getServiceByUUID('0000180a-0000-1000-8000-00805f9b34fb')
+        data = {}
+        for c in s.getCharacteristics():
+            data[str(c.uuid)] = c.read()
+
+        return DeviceInfo(data[uuids.SERIAL_NUMBER],
+                          data[uuids.MANUFACTURER_NAME],
+                          data[uuids.MODEL_NUMBER],
+                          data[uuids.HARDWARE_VERSION],
+                          data[uuids.FIRMWARE_VERSION])

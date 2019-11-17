@@ -10,3 +10,15 @@ class XiaomiThermo:
     @property
     def device_name(self):
         return self._sensor.device_name
+
+    @property
+    def temperature(self):
+        return self._sensor.temperature
+
+    @property
+    def humidity(self):
+        return self._sensor.humidity
+
+    @property
+    def battery_level(self):
+        return self._sensor.battery_level

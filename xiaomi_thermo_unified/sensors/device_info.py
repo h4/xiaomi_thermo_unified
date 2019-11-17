@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 @dataclass
 class DeviceInfo:
-    device_name: str
+    #device_name: str
     serial_number: str
     manufacturer: str
     model_number: str

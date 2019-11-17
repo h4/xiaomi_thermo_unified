@@ -36,11 +36,13 @@ class Sensor:
 
     @with_connect
     def _make_instance(self):
-        ch = self._peripheral.getCharacteristics(uuid=uuids.DEVICE_NAME)[0]
-        device_name = ch.read()
-        if device_name == b'CGG1':
+        ch = self._peripheral.getCharacteristics(uuid=uuids.MODEL_NUMBER)[0]
+        model_name = ch.read()
+        if model_name == b'CGG1':
             self._instance = ClearGrassSensor(self._peripheral, self._mac)
-        elif device_name == b'LYWSD02':
+        elif model_name == b'LYWSD02':
             self._instance = LywsdSensor(self._peripheral, self._mac)
-        elif device_name == b'MJ_HT_V1':
+        elif model_name == b'Duck_Release':
             self._instance = MjhtSensor(self._peripheral, self._mac)
+        else:
+            raise RuntimeError('Sensor %s is not supported' % model_name.decode())
